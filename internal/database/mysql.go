@@ -5,7 +5,7 @@ import (
 	"log"
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/higuruchi/participant-app/internal/interfaceadapter/repository/worker"
+	"github.com/higuruchi/bulletin-board-sample.git/internal/db_handler/mysql_gateway"
 )
 
 type mysql struct {
@@ -20,14 +20,14 @@ type SQLResult struct {
 	Result sql.Result
 }
 
-func NewDBHandler(user, password, ip, port, name string) (*mysql, func()) {
+func NewMySQL(user, password, ip, port, name string) (mysql_gateway.MySQLHandler, func(), error) {
 	conn, err := sql.Open("mysql", fmt.Sprintf(
-		"%s:%s@(%s:%d)/%s",
-		config.DB.User,
-		config.DB.Password,
-		config.DB.IP,
-		config.DB.Port,
-		config.DB.Name,
+		"%s:%s@(%s:%s)/%s",
+		user,
+		password,
+		ip,
+		port,
+		name,
 	))
 	if err != nil {
 		log.Fatal("database connection error: ", err)
@@ -35,17 +35,17 @@ func NewDBHandler(user, password, ip, port, name string) (*mysql, func()) {
 	
 	err = conn.Ping()
 	if err!= nil {
-		log.Fatal("database connection error: ", err)
+		log.Fatal("database ping error: ", err)
 	}
-	return &DatabaseHandler{
+	return &mysql{
 		Conn: conn,
-	}, func() { conn.Close() }
+	}, func() { conn.Close() }, nil
 }
 
 func (handler *mysql) Query(
 	statement string,
 	args ...interface{},
-) (worker.Row, error) {
+) (mysql_gateway.Row, error) {
 	rows, err := handler.Conn.Query(statement, args...)
 	if err != nil {
 		return nil, fmt.Errorf("calling handler.Conn.Query: %w", err)
@@ -69,7 +69,7 @@ func (tableRow *TableRow) Next() bool {
 	return tableRow.Rows.Next()
 }
 
-func (handler *mysql) Execute(statement string, args ...interface{}) (worker.Result, error) {
+func (handler *mysql) Execute(statement string, args ...interface{}) (mysql_gateway.Result, error) {
 	res := new(SQLResult)
 
 	result, err := handler.Conn.Exec(statement, args...)

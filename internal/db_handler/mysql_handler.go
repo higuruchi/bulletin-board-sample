@@ -23,7 +23,7 @@ func (m *mySQLHandler)GetAllMessage()(
 ) {
 	sql := `
 	SELECT *
-	FROM messages
+	FROM message
 	`
 	rows, err := m.database.Query(sql)
 	defer rows.Close()
@@ -51,8 +51,8 @@ func (m *mySQLHandler)RecordMessage(
 	message message.Message,
 ) error {
 	sql := `
-	INSERT INTO messages
-	(message)
+	INSERT INTO message
+	(val)
 	VALUES (?)
 	`
 	_, err := m.database.Execute(sql, message.Message())

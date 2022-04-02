@@ -1,0 +1,18 @@
+version: "3.8"
+services:
+  bulletin-board-sample:
+    build:
+      context: ../../
+      dockerfile: ./build/Dockerfile_text_echo
+    ports:
+      - "1323:1323"
+    networks:
+      bulletin-board-sample:
+        ipv4_address: 172.22.2.70
+
+networks:
+  bulletin-board-sample:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.22.2.0/24

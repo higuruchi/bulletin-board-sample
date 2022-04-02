@@ -8,8 +8,8 @@ import (
 )
 
 const (
-	db_ip = "127.0.0.1"
-	db_port = 3306
+	db_ip = "172.22.2.71"
+	db_port = "3306"
 	db_user = "user"
 	db_password = "password"
 	db_name = "bulletin_board"
@@ -17,17 +17,18 @@ const (
 )
 
 func main() {
-	textDB, err := database.NewMySQL(db_user, db_password, db_ip, db_port, db_name)
+	mysqlDB, f, err := database.NewMySQL(db_user, db_password, db_ip, db_port, db_name)
 	if err != nil {
 		panic(err)
 	}
-	DBHandler := db_handler.New(textDB)
+	defer f()
+	DBHandler := db_handler.NewMySQL(mysqlDB)
 	controller := interactor.NewController(DBHandler)
 	server := server.New(port, controller)
 	interactor := interactor.NewInteractor(server)
 
-	err = interactor.Run()
-	if err != nil {
+	e := interactor.Run()
+	if e != nil {
 		panic(err)
 	}
 }

@@ -1,0 +1,47 @@
+version: "3.8"
+services:
+  bulletin-board-sample:
+    build:
+      context: ../../
+      dockerfile: ./build/Dockerfile_mysql_echo
+    depends_on:
+      bulletin-board-sample-db:
+        condition: service_healthy
+    ports:
+      - "1323:1323"
+    networks:
+      bulletin-board-sample:
+        ipv4_address: 172.22.2.70
+
+  bulletin-board-sample-db:
+    image: mariadb:10.3.32-focal
+    container_name: bulletin-board-sample-db
+    environment:
+      - MARIADB_USER=user
+      - MARIADB_PASSWORD=password
+      - MARIADB_ROOT_PASSWORD=password
+      - MARIADB_DATABASE=bulletin_board
+    healthcheck:
+      test: mysqladmin ping --host=localhost --port=3306 --user=user --password=password --silent
+      interval: 15s
+      timeout: 2s
+      retries: 5
+    volumes:
+      - ../../db_data:/var/lib/postgresql/data
+      - ../../database/message.sql:/docker-entrypoint-initdb.d/database.sql
+    ports:
+      - "59713:3306"
+    networks:
+      bulletin-board-sample:
+        ipv4_address: 172.22.2.71
+
+volumes:
+  db_data:
+    driver: local
+
+networks:
+  bulletin-board-sample:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.22.2.0/24
