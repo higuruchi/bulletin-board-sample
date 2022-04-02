@@ -17,7 +17,10 @@ func NewMySQL(database mysql_gateway.MySQLHandler) db_gateway.DB {
 	}
 }
 
-func (m *mySQLHandler)GetAllMessage() ([]message.Message, error) {
+func (m *mySQLHandler)GetAllMessage()(
+	[]message.Message,
+	error,
+) {
 	sql := `
 	SELECT *
 	FROM messages
@@ -44,7 +47,9 @@ func (m *mySQLHandler)GetAllMessage() ([]message.Message, error) {
 	return messages, nil
 }
 
-func (m *mySQLHandler)RecordMessage(message message.Message) error {
+func (m *mySQLHandler)RecordMessage(
+	message message.Message,
+) error {
 	sql := `
 	INSERT INTO messages
 	(message)

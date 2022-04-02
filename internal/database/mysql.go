@@ -8,7 +8,7 @@ import (
 	"github.com/higuruchi/participant-app/internal/interfaceadapter/repository/worker"
 )
 
-type DatabaseHandler struct {
+type mysql struct {
 	Conn *sql.DB
 }
 
@@ -20,7 +20,7 @@ type SQLResult struct {
 	Result sql.Result
 }
 
-func NewDBHandler(user, password, ip, port, name string) (*DatabaseHandler, func()) {
+func NewDBHandler(user, password, ip, port, name string) (*mysql, func()) {
 	conn, err := sql.Open("mysql", fmt.Sprintf(
 		"%s:%s@(%s:%d)/%s",
 		config.DB.User,
@@ -42,7 +42,7 @@ func NewDBHandler(user, password, ip, port, name string) (*DatabaseHandler, func
 	}, func() { conn.Close() }
 }
 
-func (handler *DatabaseHandler) Query(
+func (handler *mysql) Query(
 	statement string,
 	args ...interface{},
 ) (worker.Row, error) {
@@ -69,7 +69,7 @@ func (tableRow *TableRow) Next() bool {
 	return tableRow.Rows.Next()
 }
 
-func (handler *DatabaseHandler) Execute(statement string, args ...interface{}) (worker.Result, error) {
+func (handler *mysql) Execute(statement string, args ...interface{}) (worker.Result, error) {
 	res := new(SQLResult)
 
 	result, err := handler.Conn.Exec(statement, args...)

@@ -25,20 +25,13 @@ type Interactor interface {
 	Run() error
 }
 
-// echo.goなどから見せるためのインタフェース
-type Controller interface {
-	Hello() string
-	Post(message.Message) error
-	GetAllMessage() ([]message.Message, error)
-}
-
 func NewInteractor(s server_gateway.Server) Interactor {
 	return &interactor {
 		server: s,
 	} 
 }
 
-func NewController(d db_gateway.DB) Controller {
+func NewController(d db_gateway.DB) server_gateway.Controller {
 	return &controller{
 		database: d,
 	}

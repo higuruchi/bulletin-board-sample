@@ -7,14 +7,13 @@ import (
 
 	"github.com/higuruchi/bulletin-board-sample.git/internal/message"
 	"github.com/higuruchi/bulletin-board-sample.git/internal/interactor/server_gateway"
-	"github.com/higuruchi/bulletin-board-sample.git/internal/interactor"
 )
 
 type (
 	server struct {
 		port int
 		echoImplement *echo.Echo
-		controller interactor.Controller
+		controller server_gateway.Controller
 	}
 	
 	Messages struct {
@@ -27,7 +26,7 @@ type (
 	}
 )
 
-func New(port int, c interactor.Controller) server_gateway.Server {
+func New(port int, c server_gateway.Controller) server_gateway.Server {
 	e := echo.New()
 
 	return &server {
