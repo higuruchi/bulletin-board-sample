@@ -9,7 +9,7 @@ import (
 
 const (
 	Port = 1323
-	TextPath = "./messages.txt"
+	TextPath = "/etc/database/message.txt"
 )
 
 func main() {

@@ -16,7 +16,7 @@ RUN  go build -o ./cmd/text_echo/main ./cmd/text_echo/main.go
 
 FROM "ubuntu"
 
-COPY    --from=builder /src/cmd/main /app/main
+COPY    --from=builder /src/cmd/text_echo/main /app/main
 WORKDIR /app
 
 CMD ["/app/main"]

@@ -9,6 +9,10 @@ services:
     networks:
       bulletin-board-sample:
         ipv4_address: 172.22.2.70
+    volumes:
+      - type: bind
+        source: ../../database
+        target: /etc/database
 
 networks:
   bulletin-board-sample:

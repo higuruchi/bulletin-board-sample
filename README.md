@@ -34,14 +34,14 @@ $ curl -X POST http://localhost:1323/message -H 'Content-Type: application/json'
 
 ```bash
 $ https://github.com/higuruchi/bulletin-board-sample.git
-$ cd bulletin-board-sample
-$ go build cmd/text_echo/main.go
+$ cd bulletin-board-sample/deployments/text
+$ docker compose up --build
 ```
 
 ## Used MySQL and echo
 
 ```bash
 $ https://github.com/higuruchi/bulletin-board-sample.git
-$ cd bulletin-board-sample
-$ go build cmd/mysql_echo/main.go
+$ cd bulletin-board-sample/deployments/mysql
+$ docker compose up --build
 ```
